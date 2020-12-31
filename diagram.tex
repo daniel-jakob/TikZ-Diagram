@@ -1,0 +1,103 @@
+\documentclass[preview, 12pt, tikz]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{positioning}
+\usepackage{pgfplots}
+\usepackage{mathtools} % Required for some maths elements 
+\usepackage{amsmath}
+\pgfplotsset{compat=1.17}
+
+\newcommand{\midarrow}{\tikz \draw[-triangle 90] (0,0) -- +(.1,0);}
+
+\begin{document}
+
+\tikzset{->-/.style={decoration={
+  markings,
+  mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+    \pgfdeclarepatternformonly{north east lines wide}%
+   {\pgfqpoint{0pt}{0pt}}%
+   {\pgfqpoint{10pt}{10pt}}%
+   {\pgfqpoint{9pt}{9pt}}%
+   {
+     \pgfsetlinewidth{0.4pt}
+     \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+     \pgfpathlineto{\pgfqpoint{9.1pt}{9.1pt}}
+     \pgfusepath{stroke}
+    }
+    \begin{axis}
+    [
+    axis line style={shorten >=-10pt, shorten <=-10pt},
+    axis y line=center,
+    axis x line=middle,
+    no markers,
+    ymin=0,
+    xmin=0,
+    ymax=225,
+    xmax=325,
+    ytick={200 , 50},
+    yticklabels={$P_\textrm{cond}$, $P_\textrm{evap}$},
+    xtick={50, 225, 300},
+    xticklabels={$h_7;h_8$, $h_5$, $h_6$},
+      xlabel style={
+                anchor=west,
+                at={(ticklabel* cs:1.0)},
+                xshift=10pt
+    },
+            ylabel style={
+                anchor=south,
+                at={(ticklabel* cs:1.0)},
+                yshift=10pt
+            },
+    xlabel=$h$,ylabel=$P$,
+    ]
+    \addplot+[draw=none,mark=none,domain=225:300,samples=100,%
+        pattern=north east lines wide,%
+        pattern color=red!50!yellow]%
+        {2*x-400}
+        \closedcycle;
+    \addplot+[draw=none,mark=none,domain=50:225,samples=100,%
+        pattern=north east lines wide,%
+        pattern color=green]%
+        {50}
+        \closedcycle;
+    \addplot+[blue, thick, ->-=.5] coordinates {
+    (50, 50) (225, 50)};
+    \addplot+[blue, thick, ->-=.5] coordinates {
+    (225, 50) (300, 200)};
+    \addplot+[blue, thick, ->-=.5] coordinates {
+    (300, 200) (50, 200)};
+    \addplot+[solid, blue, thick, ->-=.5] coordinates {
+    (50, 200) (50,50) };
+    \addplot+[dashed, black] coordinates{(0,50) (50,50)};
+    \addplot+[dashed, black] coordinates{(0,200) (50,200)};
+    \addplot+[dashed, black] coordinates{(50,0) (50,50)};
+    \addplot+[dashed, black] coordinates{(225,0) (225,50)};
+    \addplot+[dashed, black] coordinates{(300,0) (300,200)};
+    \node at (axis cs:40,60) {8};
+    \node at (axis cs:50,50)[circle,fill,inner sep=1pt]{};
+    \node at (axis cs:40,210) {7};
+    \node at (axis cs:50,200)[circle,fill,inner sep=1pt]{};
+    \node at (axis cs:290,210) {6};
+    \node at (axis cs:300,200)[circle,fill,inner sep=1pt]{};
+    \node at (axis cs:215,60) {5};
+    \node at (axis cs:225,50)[circle,fill,inner sep=1pt]{};
+    \node at (axis cs:65,125)[rotate=270] {Expansion};
+    \node at (axis cs:137.5,65)[] {Evaporator};
+    \node at (axis cs:245,125)[rotate=67] {Compressor};
+    \node at (axis cs:175,215)[] {Condenser};
+    \node at (axis cs:262.5,25) {$\dot{W}_{\textrm{comp}}$};
+    \node at (axis cs:137.5,25) {$\dot{E}_{\textrm{ref, evap}}$};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{$P$--$h$ Diagram of Refrigerant}
+    \label{fig:phdiagram}
+\end{figure}
+\hfill
+\end{document}
